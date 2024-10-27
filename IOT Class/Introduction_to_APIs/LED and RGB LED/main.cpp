@@ -1,6 +1,14 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
-#include <ArduinoJson.h>  // Include ArduinoJson library for JSON parsing
+#include <ArduinoJson.h>        // Include ArduinoJson library for JSON parsing
+#include <Adafruit_GFX.h>       // Include Adafruit GFX library
+#include <Adafruit_SSD1306.h>   // Include Adafruit SSD1306 library
+
+// OLED display settings
+#define SCREEN_WIDTH 128        // OLED display width, in pixels
+#define SCREEN_HEIGHT 64        // OLED display height, in pixels
+#define OLED_RESET    -1        // Reset pin # (or -1 if sharing Arduino reset pin)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 // Wi-Fi credentials
 const char* ssid = "EDUARDO";     
@@ -18,7 +26,7 @@ const int led2Pin = D6;       // GPIO 12 (D6 on NodeMCU) for LED2
 // RGB LED pin definitions for LED3
 const int led3RedPin = D4;    // GPIO 4 (D2 on NodeMCU) for RED
 const int led3GreenPin = D3;  // GPIO 0 (D3 on NodeMCU) for GREEN
-const int led3BluePin = D7;   // GPIO 2 (D7 on NodeMCU) for BLUE
+const int led3BluePin = D7;   // GPIO 2 (D4 on NodeMCU) for BLUE
 
 // Timer variables
 unsigned long previousMillis = 0;
@@ -34,13 +42,29 @@ void setup() {
   pinMode(led3GreenPin, OUTPUT);
   pinMode(led3BluePin, OUTPUT);
 
+  // Initialize OLED display
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3C for most OLED displays
+    Serial.println(F("SSD1306 allocation failed"));
+    for (;;); // Don't proceed, loop forever
+  }
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+
   // Connect to Wi-Fi
   Serial.print("Connecting to Wi-Fi: ");
   Serial.println(ssid);
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("Connecting to Wi-Fi:");
+  display.display();
+
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    display.print(".");
+    display.display();
   }
 
   // Display the Wi-Fi network name and IP address
@@ -49,6 +73,15 @@ void setup() {
   Serial.println(WiFi.SSID());
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
+
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("Network: ");
+  display.print(WiFi.SSID());
+  display.setCursor(0, 20);
+  display.print("IP: ");
+  display.print(WiFi.localIP());
+  display.display();
 }
 
 void checkFileAndControlLEDs() {
@@ -59,10 +92,33 @@ void checkFileAndControlLEDs() {
   Serial.print("Connecting to ");
   Serial.println(host);
 
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("Connecting to server...");
+  display.display();
+
   if (!client.connect(host, httpsPort)) {
     Serial.println("Connection failed");
+
+    // Display connection failed status
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("Connection failed");
+    display.setCursor(0, 30);
+    display.print("Host: ");
+    display.print(host);
+    display.display();
     return;
   }
+
+  // Connection succeeded, update OLED
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("Connected to server");
+  display.setCursor(0, 30);
+  display.print("Host: ");
+  display.print(host);
+  display.display();
 
   // Send the HTTP GET request
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
@@ -100,6 +156,8 @@ void checkFileAndControlLEDs() {
   // Extract LED1 and LED2 statuses from JSON
   const char* led1Status = doc["Node1"]["LED1"];
   const char* led2Status = doc["Node1"]["LED2"];
+
+  // Extract LED3 statuses from JSON
   int led3Red = doc["Node2"]["LED3"]["red"];   // Extract red component for LED3
   int led3Green = doc["Node2"]["LED3"]["green"]; // Extract green component for LED3
   int led3Blue = doc["Node2"]["LED3"]["blue"];   // Extract blue component for LED3
@@ -132,6 +190,23 @@ void checkFileAndControlLEDs() {
   Serial.print(led3Green);
   Serial.print(", Blue: ");
   Serial.println(led3Blue);
+
+  // Display LED information on OLED
+  display.clearDisplay();
+  display.setCursor(0, 20);
+  display.print("LED1: ");
+  display.println(led1Status);
+  display.print("LED2: ");
+  display.println(led2Status);
+  display.setCursor(0, 45);
+  display.print("LED3 RGB:");
+  display.print("R:");
+  display.print(led3Red);
+  display.print(" G:");
+  display.print(led3Green);
+  display.print(" B:");
+  display.print(led3Blue);
+  display.display();
 
   // Disconnect
   client.stop();
