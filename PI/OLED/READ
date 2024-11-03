@@ -1,0 +1,3 @@
+sudo pkill -f /home/Eduardo/ftp/files/turn_on_led.py  //// kill the program running in the background 
+sudo ~./bashrc /// edith the file to make a python program run in the back ground 
+sudo pyton3 /home/Eduardo/ftp/files/code3.py & /// at the bottom of the file add the path to the program you want to add to run at start/turn on the RPI
