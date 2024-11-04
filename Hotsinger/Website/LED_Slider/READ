@@ -1,0 +1,1 @@
+include Results2.txt or Result1.txt for the Json to be send to the ESP8266 to read the values of the LEDs 
