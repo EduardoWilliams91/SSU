@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <title>Button for LED</title>
+</head>
+<body>
+
+<h1 style="color:green;"> IoT Course</h1>
+<h4> Turning LED ON/OFF with a Button </h4>
+
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+    
+   <h1 style="color:red;"> LED 1</h1>
+    Click to turn ON:<input type="submit" name="led1" value="ON">
+    <p></p>
+    Click to Turn OFF: <input type="submit" name="led1" value="OFF">
+    <p></p>
+     
+     
+    <h1 style="color:blue;"> LED 2</h1>
+    Click to turn ON:<input type="submit" name="led2" value="ON">
+    <p></p>
+    Click to Turn OFF: <input type="submit" name="led2" value="OFF">
+    
+</form>
+
+<p><a href="https://eduardowilliams.net/LED/results2.txt">Link to Result2.txt</a></p>
+
+<?php
+    // Display content from results1.txt file
+    echo "Automatically reading from result1.txt file....."; 
+    
+    $file_url = 'https://eduardowilliams.net/LED/results2.txt';
+    $file_content = file_get_contents($file_url);
+    
+    if ($file_content !== false) {
+        echo nl2br($file_content);
+        echo "....\n";
+    } else {
+        echo "Error: Could not read the file.";
+    }
+
+    // Initialize LED states
+    $led1_status = " ";
+    $led2_status = " ";
+
+    // Process form submission
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $led1_status = isset($_POST['led1']) ? $_POST['led1'] : " ";
+        $led2_status = isset($_POST['led2']) ? $_POST['led2'] : " ";
+        
+        // Read existing JSON data
+        if (file_exists("results2.txt")) {
+            $file_content = file_get_contents("results2.txt");
+            $existing_data = json_decode($file_content, true);
+            if ($existing_data) {
+                $led1_status = isset($_POST['led1']) ? $_POST['led1'] : $existing_data["Node1"]["LED1"];
+                $led2_status = isset($_POST['led2']) ? $_POST['led2'] : $existing_data["Node1"]["LED2"];
+            }
+        }
+
+        // JSON format for LED status
+        $json_data = json_encode([
+            "Node1" => [
+                "LED1" => $led1_status,
+                "LED2" => $led2_status
+            ]
+        ]);
+        
+        // Save to results1.txt
+        $myfile = fopen("results2.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $json_data);
+        fclose($myfile);
+
+        // Output last action for each LED
+        echo "<p>Last action for LED1: $led1_status</p>";
+        echo "<p>Last action for LED2: $led2_status</p>";
+    }
+?>
+</body>
+</html>
