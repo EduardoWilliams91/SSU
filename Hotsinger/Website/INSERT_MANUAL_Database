@@ -1,0 +1,25 @@
+<?php
+$servername = "localhost";
+$username = "u584513343_db_EduardoWill";
+$password = "Ew-860968312$";
+$dbname = "u584513343_EduardoWilliam";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+
+
+ //Inserts data into database table
+  $sql = "INSERT INTO sensor_dataTest (Node_Name, Time_received, Temperature, Humidity) 
+  VALUES ('Node 2', '2022-10-01 12:12:12', '991', '1111')";
+
+if ($conn->query($sql) === TRUE) {
+  echo "New record created successfully \n";
+} else {
+  echo "Error: " . $sql . "<br>" . $conn->error;
+}
+
