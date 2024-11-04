@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eduardo Williams Homepage - Sonoma State</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 65vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars on small screens */
+        }
+        .title {
+            font-size: 3vh;
+            font-weight: bold;
+            color: #007bff;
+            margin: 0;
+            padding-top: 1vh;
+        }
+        .info-container {
+            font-size: 2.5vh;
+            margin-top: 1vh;
+            margin-bottom: 3vh;
+            text-align: center;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 2vh;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1vh;
+            justify-content: center;
+        }
+        .redirect-button {
+            padding: 1.5vh 3vw;
+            font-size: 2vh;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 0.5vh;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .redirect-button:hover {
+            background-color: #0056b3;
+        }
+        .clock-container {
+            display: flex;
+            gap: 5vh;
+            align-items: center;
+            margin-bottom: 5vh;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .clock {
+            position: relative;
+            width: 17vh;
+            height: 17vh;
+            border: 0.8vh solid #007bff;
+            border-radius: 55%;
+            background: #f0f8ff;
+        }
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            transform: rotate(90deg);
+        }
+        .hour {
+            width: 0.4vh;
+            height: 6vh;
+            background: #333;
+        }
+        .minute {
+            width: 0.3vh;
+            height: 8vh;
+            background: #333;
+        }
+        .second {
+            width: 0.2vh;
+            height: 5vh;
+            background: red;
+        }
+        .clock-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .clock-label {
+            font-weight: bold;
+            font-size: 2.5vh;
+            margin-top: 1vh;
+        }
+        .digital-time {
+            font-weight: bold;
+            font-size: 2.5vh;
+            margin-top: 0.5vh;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="title">Eduardo Williams - Sonoma State</h1>
+    <h1 class="info-container">Device IP: <span id="ip-address">Loading...</span></h1>
+
+    <div class="clock-container">
+        <div class="clock-section">
+            <div class="clock" id="utc-clock">
+                <!-- Clock Hands -->
+                <div class="hand hour" id="utc-hour"></div>
+                <div class="hand minute" id="utc-minute"></div>
+                <div class="hand second" id="utc-second"></div>
+            </div>
+            <div class="clock-label">UTC Time</div>
+            <div class="digital-time" id="utc-digital"></div>
+        </div>
+        <div class="clock-section">
+            <div class="clock" id="local-clock">
+                <!-- Clock Hands -->
+                <div class="hand hour" id="local-hour"></div>
+                <div class="hand minute" id="local-minute"></div>
+                <div class="hand second" id="local-second"></div>
+            </div>
+            <div class="clock-label">Local Time</div>
+            <div class="digital-time" id="local-digital"></div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="https://eduardowilliams.net/LED/click.php" class="redirect-button">Go to LED Click</a>
+        <a href="https://eduardowilliams.net/LED/slider.php" class="redirect-button">Go to LED Slider</a>
+        <a href="https://github.com/EduardoWilliams91/SSU/tree/main/IOT%20Class/Programming%20ESP8266/WiFi%20and%20DataBase" class="redirect-button">Go to GitHub IoT Project</a>
+        <a href="https://eduardowilliams.net/Chartjs/DataBaseTableandGraph.php" class="redirect-button">Go to Database and Graph</a>
+        <a href="https://hpanel.hostinger.com/websites/eduardowilliams.net" class="redirect-button">Go to Hostinger Panel</a>
+    </div>
+
+    <script>
+        function updateClocks() {
+            const now = new Date();
+
+            // Update UTC clock
+            const utcHour = now.getUTCHours() % 12;
+            const utcMinute = now.getUTCMinutes();
+            const utcSecond = now.getUTCSeconds();
+            document.getElementById('utc-hour').style.transform = `rotate(${(utcHour * 30) + (utcMinute / 2)}deg)`;
+            document.getElementById('utc-minute').style.transform = `rotate(${utcMinute * 6}deg)`;
+            document.getElementById('utc-second').style.transform = `rotate(${utcSecond * 6}deg)`;
+
+            // Update local clock
+            const localHour = now.getHours() % 12;
+            const localMinute = now.getMinutes();
+            const localSecond = now.getSeconds();
+            document.getElementById('local-hour').style.transform = `rotate(${(localHour * 30) + (localMinute / 2)}deg)`;
+            document.getElementById('local-minute').style.transform = `rotate(${localMinute * 6}deg)`;
+            document.getElementById('local-second').style.transform = `rotate(${localSecond * 6}deg)`;
+
+            // Update digital UTC time
+            const utcDigitalTime = now.toUTCString().slice(-12, -4);
+            document.getElementById('utc-digital').textContent = utcDigitalTime;
+
+            // Update digital local time
+            const localDigitalTime = now.toLocaleTimeString();
+            document.getElementById('local-digital').textContent = localDigitalTime;
+        }
+
+        // Fetch IP address from an external API
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ip-address').textContent = data.ip;
+            })
+            .catch(error => {
+                document.getElementById('ip-address').textContent = "Unable to fetch IP";
+                console.error("Error fetching IP address:", error);
+            });
+
+        // Update clocks every second
+        setInterval(updateClocks, 1000);
+
+        // Initialize clocks on load
+        updateClocks();
+    </script>
+</body>
+</html>
