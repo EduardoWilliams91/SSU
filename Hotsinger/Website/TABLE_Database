@@ -1,0 +1,107 @@
+<?php
+// Database configuration
+define('DB_HOST', 'localhost');
+define('DB_USERNAME', 'u584513343_db_EduardoWill');
+define('DB_PASSWORD', 'Ew-860968312$');
+define('DB_NAME', 'u584513343_EduardoWilliam');
+
+// Establish database connection
+$mysqli = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+
+// Query to get data from the table 1
+$query = "SELECT * FROM sensor_register2";
+// Query to get data from the table 2
+$query2 = "SELECT * FROM sensor_data2";
+
+// Execute query 1
+$result = $mysqli->query($query);
+// Execute query 2
+$result2 = $mysqli->query($query2);
+
+// Close connection (important!)
+$mysqli->close();
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <h1 align="center">Welcome to Sonoma State IoT Lab </h1>
+
+  	<ul>
+        <body style="background-color:White;">
+            
+     </ul>
+    
+    <title>DataBase Graph</title>
+</head>
+<body>
+    
+  
+
+   
+    
+    <table align="center" border="1px" style="width:450px; line-height:30px;">
+        <tr>
+            <th colspan="4"><h2>Register Sensor Nodes</h2></th>
+        </tr>
+        <tr>
+             <th>Node</th>
+            <th>Manufacturer</th>
+            <th>Longitude</th>
+             <th>Latitude</th>
+            
+        </tr>
+        <?php
+        // Loop through the returned data
+        foreach ($result as $row) {
+            ?>
+            <tr>
+                <td ><?php echo $row['Node_Name']; ?></td>
+                <td><?php echo $row['manufacturer']; ?></td>
+                <td><?php echo $row['longitude']; ?></td>
+                <td><?php echo $row['latitude']; ?></td>
+            </tr>
+            <?php
+        }
+        ?>
+    </table>
+   
+   </p>
+
+    
+      <table align="center" border="1px" style="width:450px; line-height:30px;">
+        <tr>
+            <th colspan="4"><h2>Data Received</h2></th>
+        </tr>
+        <tr>
+            <th>Node</th>
+            <th>Time</th>
+            <th>Temperature</th>
+            <th>Humidity</th>
+            
+        </tr>
+        <?php
+        // Loop through the returned data
+        foreach ($result2 as $row) {
+            ?>
+            <tr>
+              <td><?php echo $row['Node_Name']; ?></td>
+                <td><?php echo $row['Time_received']; ?></td>
+                <td><?php echo $row['Temperature']; ?></td>
+                <td><?php echo $row['Humidity']; ?></td>
+                
+            </tr>
+            <?php
+        }
+        ?>
+    </table>
+    
+    
+    
+</body>
+</html>
