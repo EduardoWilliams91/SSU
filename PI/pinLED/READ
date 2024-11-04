@@ -1,0 +1,3 @@
+C:\Users\Willi>ping 192.168.110.28 -l 1 // Turn on LED base on bytes length 
+C:\Users\Willi>ping 192.168.110.28 -l 3 // Turn OFF LED base on bytes length 
+C:\Users\Willi>ping 192.168.110.28 -l 128 //Print Ping recive 
