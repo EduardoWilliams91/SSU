@@ -1,0 +1,68 @@
+Using a Raspberry Pi as a Bridge. (Router connected to Pi give WiFi)
+
+sudo apt update
+sudo apt full-upgrade
+sudo apt-get install dhcpcd
+sudo nano /etc/dhcpcd.conf
+
+Add the following lines at the end to set up a static IP for the Ethernet interface (assuming the interface is eth0):
+
+interface eth0
+static ip_address=192.168.2.1/24
+nohook wpa_supplicant
+
+Save and close the file (Ctrl + X, then Y, then Enter).
+
+Enable IP Forwarding:
+Open the sysctl configuration file
+
+sudo nano /etc/sysctl.conf
+
+Find or add the following line to enable IP forwarding:
+
+net.ipv4.ip_forward=1
+
+Save and close the file, then activate IP forwarding with
+
+sudo sysctl -p
+
+Configure NAT (Network Address Translation):
+Set up NAT to allow internet sharing by running
+
+sudo apt install iptables
+sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+
+Check if the iptables rule for NAT is applied correctly:
+Run the following to view iptables NAT table rules:
+
+sudo iptables -t nat -L
+
+You should see a rule like:
+
+MASQUERADE  all  --  anywhere  anywhere
+
+Make the iptables rules persistent across reboots:
+
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+Add the following line to the /etc/rc.local file before the exit 0 line to load these rules on startup:
+
+sudo iptables-restore < /etc/iptables.ipv4.nat
+
+Configure the DHCP Server:
+Install dnsmasq for DHCP and DNS services:
+
+sudo apt-get install dnsmasq
+
+Edit the configuration
+
+sudo nano /etc/dnsmasq.conf
+
+Add the following lines to configure the DHCP server on eth0:
+
+interface=eth0
+dhcp-range=192.168.2.50,192.168.2.150,12h
+Restart the Raspberry Pi:
+
+sudo reboot
+
