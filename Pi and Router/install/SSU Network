@@ -1,0 +1,31 @@
+How to Enable WPA and WPA2 Enterprise (Wireless) on Raspberry Pi
+The following requires your Raspberry Pi to be connected to a monitor, mouse, keyboard and internet.
+
+In order to enable WPA & WPA2 Enterprise on a Raspberry Pi, follow the instruction below:
+
+Open a terminal
+Type: sudo apt install network-manager network-manager-gnome
+Once the installation is finished, type: sudo raspi-config
+In the configuration window select: 6 Advanced Options
+Choose: AA Network Config
+There are two options here: 1 dhcpcd and 2 NetworkManager
+Select 2 NetworkManager
+OK the action.
+It may ask you to reboot the Pi. Ok that as well.
+Once the reboot is done, you should be able to see SSU-SECURE as an option.
+To configure it, follow the instructions on How to connect to ssu-secure wireless network in Ubuntu page.
+
+
+
+How to connect to ssu-secure wireless network in Ubuntu
+Here is the procedure:
+
+Wi-Fi security: WPA & WPA2 Enterprise
+Authentication: Protected EAP (PEAP)
+Leave "Anonymous identity" and "Domain" blank
+CA certificate: none
+Leave "CA certificate password" blank
+Check “No CA certificate is required” Box
+PEAP version: Automatic
+Inner authentication: MSCHAPv2
+Now you should be able to sign in with your Seawolf Username and Password.
