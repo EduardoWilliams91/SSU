@@ -29,3 +29,23 @@ Check “No CA certificate is required” Box
 PEAP version: Automatic
 Inner authentication: MSCHAPv2
 Now you should be able to sign in with your Seawolf Username and Password.
+
+
+
+Disable dhcpcd: Since dhcpcd manages network connections by default on Raspberry Pi, you need to disable it to allow Network Manager to take control.
+
+sudo systemctl disable dhcpcd
+sudo systemctl stop dhcpcd
+
+Enable Network Manager: Start and enable Network Manager to take over network management.
+
+sudo systemctl enable NetworkManager
+sudo systemctl start NetworkManager
+
+sudo reboot
+
+Check Network Manager Status: After rebooting, check if Network Manager is running correctly.
+
+sudo systemctl status NetworkManager
+
+
