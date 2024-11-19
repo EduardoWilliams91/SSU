@@ -4,8 +4,8 @@ import time
 import RPi.GPIO as GPIO
 
 # ThingSpeak TalkBack Configuration
-my_api_key = "2HX1P3AZ61SW6KCW"  # Replace with your API Key
-my_talkback_id = "53589"          # Replace with your TalkBack ID
+my_api_key = ""  # Replace with your API Key
+my_talkback_id = ""          # Replace with your TalkBack ID
 
 # GPIO Setup
 LED_PIN = 18                      # Replace with the GPIO pin you're using for the LED
