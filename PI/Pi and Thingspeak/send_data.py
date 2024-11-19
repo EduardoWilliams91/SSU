@@ -6,7 +6,7 @@ import psutil
 import os
 
 # ThingsSpeak Write API Key
-apikey = "ADZBJPTFZXXJJR3N"  # Replace with your actual Write API Key
+apikey = ""  # Replace with your actual Write API Key
 
 def get_cpu_temperature():
     """Function to get the CPU temperature."""
