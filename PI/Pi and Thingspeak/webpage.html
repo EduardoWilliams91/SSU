@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Raspberry Pi Control and Monitoring</title>
+    <style>
+        body {
+            text-align: center; /* Center-align the content */
+            font-family: Arial, sans-serif;
+        }
+        table {
+            margin: 0 auto; /* Center the table on the page */
+            border-collapse: collapse; /* Make the table cleaner */
+        }
+        th, td {
+            padding: 10px;
+        }
+        iframe {
+            border: 1px solid #cccccc; /* Add a border to the iframe */
+        }
+        form {
+            margin-bottom: 20px; /* Add spacing between forms and sections */
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .btn-on {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .btn-on:hover {
+            background-color: #218838;
+        }
+        .btn-off {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .btn-off:hover {
+            background-color: #c82333;
+        }
+        h1 {
+            color: #333; /* Add a custom color to the main title */
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Header -->
+    <h1>Raspberry Pi Control and Monitoring</h1>
+
+    <!-- Section: Quick LED Control -->
+    <h2>Quick LED Control</h2>
+
+    <!-- Turn LED ON -->
+    <form action="https://api.thingspeak.com/talkbacks/53589/commands.json" method="post" target="invisible">
+        <input type="hidden" name="api_key" value="2HX1P3AZ61SW6KCW">
+        <input type="hidden" name="command_string" value="ON">
+        <button type="submit" class="btn-on">Turn ON</button>
+    </form>
+
+    <!-- Turn LED OFF -->
+    <form action="https://api.thingspeak.com/talkbacks/53589/commands.json" method="post" target="invisible">
+        <input type="hidden" name="api_key" value="2HX1P3AZ61SW6KCW">
+        <input type="hidden" name="command_string" value="OFF">
+        <button type="submit" class="btn-off">Turn OFF</button>
+    </form>
+
+    <!-- Invisible iframe to handle form submissions without leaving the page -->
+    <iframe name="invisible" style="display:none;"></iframe>
+
+    <!-- Section: Monitor Raspberry Pi Data -->
+    <h2>Monitor Your Raspberry Pi Data</h2>
+    <p>Here is the data directly from the Raspberry Pi:</p>
+    <table border="1">
+        <tbody>
+            <tr>
+                <th scope="row">
+                    <iframe 
+                        width="450" 
+                        height="260" 
+                        src="https://thingspeak.com/channels/2750364/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Raspberry+Pi+Temperature&type=line&yaxis=Temperature+C">
+                    </iframe>
+                </th>
+                <td>
+                    <iframe 
+                        width="450" 
+                        height="260" 
+                        src="https://thingspeak.com/channels/2750364/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Raspberry+Pi+CPU&type=line&yaxis=CPU">
+                    </iframe>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <iframe 
+                        width="450" 
+                        height="260" 
+                        src="https://thingspeak.com/channels/2750364/widgets/970854">
+                    </iframe>
+                </th>
+                <td>
+                    <iframe 
+                        width="450" 
+                        height="260" 
+                        src="https://thingspeak.com/apps/matlab_visualizations/591052">
+                    </iframe>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Section: Control Your Raspberry Pi -->
+    <h2>Control Your Raspberry Pi</h2>
+    <!-- Form to Add a Command to the TalkBack Queue -->
+    <form action="https://api.thingspeak.com/talkbacks/53589/commands.json" target="_blank" method="post">
+        <input type="hidden" name="api_key" value="2HX1P3AZ61SW6KCW">
+        <label for="command_string">Command (e.g., ON/OFF):</label>
+        <input type="text" name="command_string" id="command_string" placeholder="Enter Command"><br><br>
+        
+        <label for="position">Position (Optional):</label>
+        <input type="text" name="position" id="position" placeholder="Enter Position"><br><br>
+        
+        <input type="submit" value="Send Command">
+    </form>
+
+    <!-- Form to Check the Queue -->
+    <form action="https://api.thingspeak.com/talkbacks/53589/commands.json" target="_blank" method="get">
+        <input type="hidden" name="api_key" value="2HX1P3AZ61SW6KCW">
+        <button type="submit">View Queue</button>
+    </form>
+
+    <!-- Form to Remove All Commands from the Queue -->
+    <form action="https://api.thingspeak.com/talkbacks/53589/commands.json" target="_blank" method="delete">
+        <input type="hidden" name="api_key" value="2HX1P3AZ61SW6KCW">
+        <button type="submit">Clear Queue</button>
+    </form>
+</body>
+</html>
